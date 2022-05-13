@@ -23,7 +23,7 @@ android {
     }
 
     buildTypes.all {
-        buildConfigField("String", "REST_CAT_API_BASE_URL", "\"https://api.thecatapi.com/v1\"")
+        buildConfigField("String", "REST_CAT_API_BASE_URL", "\"https://api.thecatapi.com/v1/\"")
         buildConfigField("String", "REST_CAT_API_KEY", "\"0d627083-3eb0-4da7-b38e-1eba46662a91\"")
     }
 
