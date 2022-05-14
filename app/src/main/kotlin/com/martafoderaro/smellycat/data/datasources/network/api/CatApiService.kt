@@ -11,7 +11,7 @@ interface CatApiService {
         val name: String,
         val origin: String,
         val temperament: String,
-        val wikipedia_url: String,
+        val wikipedia_url: String?,
     )
 
     @JsonClass(generateAdapter = true)
@@ -20,9 +20,14 @@ interface CatApiService {
         val url: String,
     )
 
-    @GET("/breeds")
+    @GET("breeds")
     suspend fun breeds(): List<ApiBreed>
 
-    @GET("/images/search")
-    suspend fun searchBreedImages(@Query("breed_ids") breedId: String): List<ApiBreedImage>
+    @GET("images/search")
+    suspend fun searchBreedImages(
+        @Query("breed_ids") breedId: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("order") order: String,
+    ): List<ApiBreedImage>
 }
