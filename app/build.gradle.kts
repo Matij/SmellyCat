@@ -45,6 +45,13 @@ android {
             jvmTarget = "1.8"
         }
     }
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = Deps.Compose.version
+    }
 }
 
 dependencies {
@@ -70,6 +77,16 @@ dependencies {
     // Coroutines
     implementation(Deps.Coroutines.core)
     implementation(Deps.Coroutines.android)
+
+    // Image loading
+    implementation(Deps.Coil.compose)
+
+    // Pager
+    implementation(Deps.Compose.pager)
+    implementation(Deps.Compose.pagerIndicators)
+
+    // Logging
+    implementation(Deps.timber)
 
     // Test
     addUnitTest()

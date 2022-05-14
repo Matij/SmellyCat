@@ -68,9 +68,6 @@ object Deps {
     object Lifecycle {
         private const val version = "2.4.0"
 
-        const val viewModelKtx = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version" // viewModelScope
-        const val runtimeKtx = "androidx.lifecycle:lifecycle-runtime-ktx:$version" // lifecycleScope
-        const val commonJava8 = "androidx.lifecycle:lifecycle-common-java8:$version"
         const val viewModelCompose = "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha05"
     }
 
@@ -84,13 +81,6 @@ object Deps {
         const val moshiAdapters = "com.squareup.moshi:moshi-adapters:$version"
         const val moshiKotlin = "com.squareup.moshi:moshi-kotlin:$version"
         const val moshiKotlinCodegen = "com.squareup.moshi:moshi-kotlin-codegen:$version"
-    }
-
-    object Navigation {
-        private const val version = "2.4.2"
-        const val compose = "androidx.navigation:navigation-compose:$version"
-        const val runtime = "androidx.compose.runtime:runtime:1.1.1n"
-        const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:1.1.1"
     }
 
     object OkHttp {
