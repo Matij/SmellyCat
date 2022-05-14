@@ -1,8 +1,8 @@
-package buildConfig
+package buildcfg
 
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
-const val kotlinVersion = "1.6.0"
+const val kotlinVersion = "1.6.10"
 
 object appConfig {
     const val applicationId = "com.martafoderaro.smellycat"
@@ -17,6 +17,8 @@ object appConfig {
 }
 
 object Deps {
+    const val timber = "com.jakewharton.timber:timber:5.0.1"
+
     object AndroidX {
         const val activityCompose = "androidx.activity:activity-compose:1.4.0"
         const val appCompat = "androidx.appcompat:appcompat:1.4.1"
@@ -24,16 +26,23 @@ object Deps {
         const val pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha14"
     }
 
-    object Compose {
-        const val version = "1.1.0-beta03"
+    object Coil {
+        const val compose = "io.coil-kt:coil-compose:2.0.0"
+    }
 
-        const val layout = "androidx.compose.foundation:foundation-layout:$version"
+    object Compose {
+        const val version = "1.1.1"
+
+        const val compiler = "androidx.compose.compiler:compiler:$version"
+        const val pager = "com.google.accompanist:accompanist-pager:0.24.8-beta"
+        const val pagerIndicators = "com.google.accompanist:accompanist-pager-indicators:0.24.8-beta"
         const val foundation = "androidx.compose.foundation:foundation:$version"
-        const val ui = "androidx.compose.ui:ui:$version"
+        const val layout = "androidx.compose.foundation:foundation-layout:$version"
         const val material = "androidx.compose.material:material:$version"
         const val materialIconsExtended = "androidx.compose.material:material-icons-extended:$version"
         const val runtime = "androidx.compose.runtime:runtime:$version"
         const val tooling = "androidx.compose.ui:ui-tooling:$version"
+        const val ui = "androidx.compose.ui:ui:$version"
     }
 
     object Coroutines {
@@ -77,6 +86,13 @@ object Deps {
         const val moshiKotlinCodegen = "com.squareup.moshi:moshi-kotlin-codegen:$version"
     }
 
+    object Navigation {
+        private const val version = "2.4.2"
+        const val compose = "androidx.navigation:navigation-compose:$version"
+        const val runtime = "androidx.compose.runtime:runtime:1.1.1n"
+        const val runtimeLiveData = "androidx.compose.runtime:runtime-livedata:1.1.1"
+    }
+
     object OkHttp {
         private const val version = "4.9.3"
         const val okhttp = "com.squareup.okhttp3:okhttp:$version"
@@ -105,6 +121,7 @@ object Deps {
             AndroidX.activityCompose,
             AndroidX.pagingCompose,
             Lifecycle.viewModelCompose,
+            Compose.compiler,
             Compose.layout,
             Compose.foundation,
             Compose.ui,

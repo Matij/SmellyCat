@@ -1,6 +1,6 @@
-import buildConfig.*
-import buildConfig.Deps.addUnitTest
-import buildConfig.Deps.implementationCompose
+import buildcfg.*
+import buildcfg.Deps.addUnitTest
+import buildcfg.Deps.implementationCompose
 
 plugins {
     id("com.android.application")
