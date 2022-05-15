@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.martafoderaro.smellycat.R
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.model.Breed
@@ -52,7 +52,7 @@ class MainActivity: ComponentActivity() {
     @Preview
     @Composable
     private fun CatBreedPreview() {
-        MainScreen(viewModel())
+        MainScreen()
     }
 
     @Composable
@@ -63,9 +63,19 @@ class MainActivity: ComponentActivity() {
 
         Scaffold(
             topBar = {
-                TopAppBar(title = {
-                    Text(text = stringResource(id = R.string.main_screen_title))
-                })
+                TopAppBar(
+                    title = {
+                        Text(text = stringResource(id = R.string.main_screen_title))
+                    },
+                    actions = {
+                        Image(
+                            painter = painterResource(id = android.R.drawable.radiobutton_off_background),
+                            modifier = Modifier.padding(horizontal = 8.dp),
+                            colorFilter = ColorFilter.tint(state.connectionIndicatorColor),
+                            contentDescription = ""
+                        )
+                    }
+                )
             },
             scaffoldState = scaffoldState
         ) {

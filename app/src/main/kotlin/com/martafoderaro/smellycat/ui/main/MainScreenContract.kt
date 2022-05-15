@@ -1,6 +1,7 @@
 package com.martafoderaro.smellycat.com.martafoderaro.smellycat.ui.main
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
 import com.martafoderaro.smellycat.base.UiEvent
 import com.martafoderaro.smellycat.base.UiState
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.model.Breed
@@ -12,6 +13,7 @@ sealed class MainScreenUiEvent : UiEvent {
     data class ShowBreedImages(val images: List<BreedImage>): MainScreenUiEvent()
     data class UpdateSelectedBreed(val breed: Breed): MainScreenUiEvent()
     data class ShowError(val message: String): MainScreenUiEvent()
+    data class UpdateConnectionIndicator(val connected: Boolean): MainScreenUiEvent()
 }
 
 @Immutable
@@ -20,6 +22,7 @@ data class MainScreenState(
     val selectedBreed: Breed?,
     val breeds: List<Breed>,
     val images: List<BreedImage>,
+    val connectionIndicatorColor: Color,
     val errorMessage: String?,
 ): UiState {
     companion object {
@@ -28,12 +31,13 @@ data class MainScreenState(
             selectedBreed = null,
             breeds = emptyList(),
             images = emptyList(),
+            connectionIndicatorColor = Color.Red,
             errorMessage  = null
         )
     }
 
     override fun toString(): String {
-        return "MainScreenState(isLoading=$isLoading, breeds=$breeds, images=$images, errorMessage=$errorMessage)"
+        return "MainScreenState(isLoading=$isLoading, breeds=$breeds, images=$images, connectionIndicatorColor=$connectionIndicatorColor, errorMessage=$errorMessage)"
     }
 
 

@@ -1,17 +1,25 @@
 package com.martafoderaro.smellycat.com.martafoderaro.smellycat.ui.main
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.martafoderaro.smellycat.base.BaseViewModel
 import com.martafoderaro.smellycat.base.Reducer
-import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.*
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.GetBreedImagesParameters
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.GetBreedParameters
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.IGetBreedImagesCase
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.IGetBreedsUseCase
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.IGetBreedUseCase
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.util.isConnected
 import com.martafoderaro.smellycat.core.CoroutineDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
+@Suppress("DeferredResultUnused")
 @HiltViewModel
 @FlowPreview
 class MainViewModel @Inject constructor(
@@ -32,6 +40,7 @@ class MainViewModel @Inject constructor(
 
     init {
         loadBreeds()
+        observeConnectionState()
     }
 
     fun onBreedSelected(breedId: String) {
@@ -58,6 +67,13 @@ class MainViewModel @Inject constructor(
             Timber.e(wrapErrorMessage(e))
             sendEvent(MainScreenUiEvent.ShowError(
                 message = e.message ?: "${MainViewModel::class.qualifiedName}: Unknown error."))
+        }
+    }
+
+    private fun observeConnectionState() {
+        viewModelScope.launchPeriodicAsync(1000L) {
+            val newConnectedState = isConnected()
+            sendEvent(MainScreenUiEvent.UpdateConnectionIndicator(newConnectedState))
         }
     }
 
@@ -91,6 +107,11 @@ class MainViewModel @Inject constructor(
                 }
                 is MainScreenUiEvent.ShowError -> {
                     setState(oldState.copy(isLoading = false, images = emptyList(), errorMessage = event.message))
+                }
+                is MainScreenUiEvent.UpdateConnectionIndicator -> {
+                    val connected = event.connected
+                    setState(oldState.copy(
+                        connectionIndicatorColor = if (connected) Color.Green else Color.Red))
                 }
                 else -> {
                     // do nothing
