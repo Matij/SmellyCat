@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface BreedRepository {
     fun breeds(): Flow<List<Breed>>
+    fun breed(breedId: String): Flow<Breed>
     fun searchBreedImages(breedId: String, page: Int, limit: Int, order: String): Flow<List<BreedImage>>
 }

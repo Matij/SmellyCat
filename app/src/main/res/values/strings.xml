@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SmellyCat</string>
-    <string name="main_screen_title">Cat Breed images</string>
+    <string name="main_screen_title">Cat Breed Images Gallery</string>
     <string name="dropdown_label">Breed</string>
     <string name="empty_state_label">No data available. Please, try again later.</string>
+    <string name="image_label">Image %1$s</string>
 </resources>

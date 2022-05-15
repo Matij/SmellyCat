@@ -11,6 +11,7 @@ class ApiBreedMapper @Inject constructor(): Mapper<BreedEntity, CatApiService.Ap
             breedId = id,
             name = name,
             origin = origin,
+            description = description,
             temperament = temperament,
             wikiUrl = wikipedia_url,
         )

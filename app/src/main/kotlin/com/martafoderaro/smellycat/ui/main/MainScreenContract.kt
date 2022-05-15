@@ -10,21 +10,25 @@ import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.model.Bree
 sealed class MainScreenUiEvent : UiEvent {
     data class ShowBreeds(val breeds: List<Breed>): MainScreenUiEvent()
     data class ShowBreedImages(val images: List<BreedImage>): MainScreenUiEvent()
+    data class UpdateSelectedBreed(val breed: Breed): MainScreenUiEvent()
     data class ShowError(val message: String): MainScreenUiEvent()
 }
 
 @Immutable
 data class MainScreenState(
     val isLoading: Boolean,
+    val selectedBreed: Breed?,
     val breeds: List<Breed>,
     val images: List<BreedImage>,
-    val errorMessage: String? = null,
+    val errorMessage: String?,
 ): UiState {
     companion object {
         fun initial() = MainScreenState(
             isLoading = true,
+            selectedBreed = null,
             breeds = emptyList(),
             images = emptyList(),
+            errorMessage  = null
         )
     }
 

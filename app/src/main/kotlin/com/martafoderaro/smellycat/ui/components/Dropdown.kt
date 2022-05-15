@@ -20,6 +20,7 @@ import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.model.Bree
 @Composable
 fun Dropdown(
     items: List<Breed>,
+    selectedBreed: Breed?,
     onItemSelected: (String) -> Unit
 ) {
     // Declaring a boolean value to store
@@ -27,7 +28,7 @@ fun Dropdown(
     var mExpanded by remember { mutableStateOf(false) }
 
     // Create a string value to store the selected city
-    var mSelectedText by remember { mutableStateOf("") }
+    var mSelectedText by remember { mutableStateOf(selectedBreed?.name ?: "") }
 
     var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
 
@@ -44,6 +45,7 @@ fun Dropdown(
         OutlinedTextField(
             value = mSelectedText,
             onValueChange = { mSelectedText = it },
+            readOnly = true,
             modifier = Modifier
                 .fillMaxWidth()
                 .onGloballyPositioned { coordinates ->
@@ -55,7 +57,7 @@ fun Dropdown(
             trailingIcon = {
                 Icon(icon,"contentDescription",
                     Modifier.clickable { mExpanded = !mExpanded })
-            }
+            },
         )
 
         // Create a drop-down menu with list of cities,

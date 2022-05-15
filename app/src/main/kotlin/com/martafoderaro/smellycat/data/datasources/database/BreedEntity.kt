@@ -8,6 +8,7 @@ class BreedEntity(
     @PrimaryKey val breedId: String,
     val name: String,
     val origin: String,
+    val description: String,
     val temperament: String,
     val wikiUrl: String?,
 )

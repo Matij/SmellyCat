@@ -14,5 +14,8 @@ interface UseCaseModule {
     fun bindGetBreedsUseCase(useCase: GetBreedsUseCase): IGetBreedsUseCase
     @Binds
     @ViewModelScoped
+    fun bindGetBreedUseCase(useCase: GetBreedUseCase): IGetBreedUseCase
+    @Binds
+    @ViewModelScoped
     fun bindGetBreedImagesUseCase(useCase: GetBreedImagesUseCase): IGetBreedImagesCase
 }

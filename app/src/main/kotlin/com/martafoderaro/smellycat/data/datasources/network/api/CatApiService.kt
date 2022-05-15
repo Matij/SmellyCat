@@ -10,6 +10,7 @@ interface CatApiService {
         val id: String,
         val name: String,
         val origin: String,
+        val description: String,
         val temperament: String,
         val wikipedia_url: String?,
     )

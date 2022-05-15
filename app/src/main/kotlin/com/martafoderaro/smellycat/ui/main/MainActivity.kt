@@ -13,9 +13,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.martafoderaro.smellycat.R
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.model.Breed
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.ui.components.Dropdown
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.ui.components.ImagePager
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.ui.components.MySnackbar
@@ -94,6 +98,7 @@ class MainActivity: ComponentActivity() {
         Column(modifier = Modifier.verticalScroll(scrollState)) {
             Dropdown(
                 items = state.breeds,
+                selectedBreed = state.selectedBreed,
                 onItemSelected = onBreedSelected
             )
 
@@ -103,6 +108,52 @@ class MainActivity: ComponentActivity() {
                 images = state.images,
                 modifier = Modifier.fillMaxSize(),
             )
+
+            Spacer(modifier = Modifier.height(32.dp))
+
+            SelectedItemDetails(selectedBreed = state.selectedBreed)
+        }
+    }
+
+    @Composable
+    private fun SelectedItemDetails(selectedBreed: Breed?) {
+        selectedBreed?.let {
+            Text(
+                text = selectedBreed.name,
+                textAlign = TextAlign.Center,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                modifier = Modifier.fillMaxSize(),
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Card(elevation = 4.dp) {
+                Text(
+                    text = selectedBreed.description,
+                    textAlign = TextAlign.Center,
+                    fontSize = 16.sp,
+                    fontStyle = FontStyle.Italic,
+                    color = Color.Gray,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = selectedBreed.temperament,
+                textAlign = TextAlign.Center,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 

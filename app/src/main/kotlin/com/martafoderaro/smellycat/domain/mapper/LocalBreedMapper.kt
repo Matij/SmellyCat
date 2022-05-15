@@ -11,6 +11,7 @@ class LocalBreedMapper @Inject constructor(): Mapper<Breed, BreedEntity> {
             id = breedId,
             name = name,
             origin = origin,
+            description = description,
             temperament = temperament,
             wikiUrl = wikiUrl
         )

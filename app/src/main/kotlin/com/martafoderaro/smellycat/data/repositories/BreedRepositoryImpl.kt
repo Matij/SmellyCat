@@ -31,6 +31,10 @@ class BreedRepositoryImpl @Inject constructor(
         else -> localBreeds()
     }
 
+    override fun breed(breedId: String) = flow {
+        emit(localBreedMapper.map(breedDao.getBreed(breedId)))
+    }.flowOn(dispatchers.io)
+
     private fun localBreeds() = flow {
         val localBreeds = breedDao.getAllBreeds()
         emit(localBreedMapper.map(localBreeds))
@@ -66,7 +70,7 @@ class BreedRepositoryImpl @Inject constructor(
         breedDao.insertAllBreeds(data)
     }
     private suspend fun storeBreedImagesInLocalMemory(breedId: String, data: List<BreedImageEntity>) {
-        // Need data analysis to assess whether an image can be associated to multiple breeds.
+        //TODO Need data analysis to assess whether an image can be associated to multiple breeds.
         // If this is the case, persistence layer tables will have one-to-many relationship.
         val manipulatedData = data.map { with (it) {
             BreedImageEntity(
