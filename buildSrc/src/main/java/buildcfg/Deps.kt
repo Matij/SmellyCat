@@ -97,6 +97,14 @@ object Deps {
         const val converterMoshi = "com.squareup.retrofit2:converter-moshi:$version"
     }
 
+    object Room {
+        private const val version = "2.4.2"
+        const val room = "androidx.room:room-runtime:$version"
+        const val roomKtx = "androidx.room:room-ktx:$version"
+        const val compiler = "androidx.room:room-compiler:$version"
+        const val testing = "androidx.room:room-testing:$version"
+    }
+
     object Test {
         const val espresso = "androidx.test.espresso:espresso-core:3.4.0"
         const val extJUnit = "androidx.test.ext:junit:1.1.3"

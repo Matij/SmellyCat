@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,29 +32,32 @@ class MainViewModel @Inject constructor(
         get() = reducer.state
 
     init {
-        viewModelScope.launch(dispatchers.io) {
-            try {
-                val data = getBreedsUseCase.invoke(Unit)
-                sendEvent(MainScreenUiEvent.ShowBreeds(breeds = data.last()))
-            } catch (e: Throwable) {
-                sendEvent(MainScreenUiEvent.ShowError(
-                    message = e.message ?: "${MainViewModel::class.qualifiedName}: Unknown error."))
-            }
-        }
+        loadBreeds()
     }
 
     fun onBreedSelected(breedId: String) {
         getBreedImages(breedId = breedId)
     }
 
+    private fun loadBreeds() = viewModelScope.launch(dispatchers.io) {
+        try {
+            val data = getBreedsUseCase.invoke(Unit).last()
+            sendEvent(MainScreenUiEvent.ShowBreeds(breeds = data))
+        } catch (e: Throwable) {
+            Timber.e(wrapErrorMessage(e))
+            sendEvent(MainScreenUiEvent.ShowError(
+                message = e.message ?: "${MainViewModel::class.qualifiedName}: Unknown error."))
+        }
+    }
+
     private fun getBreedImages(breedId: String) = viewModelScope.launch(dispatchers.io) {
         val parameters = GetBreedImagesParameters(breedId = breedId, page = 2, limit = 10, order = ImageOrderType.RANDOM.name)
         try {
-            val data = getBreedImagesUseCase.invoke(parameters = parameters)
-            sendEvent(MainScreenUiEvent.ShowBreedImages(images = data.last()))
+            val data = getBreedImagesUseCase.invoke(parameters = parameters).last()
+            sendEvent(MainScreenUiEvent.ShowBreedImages(images = data))
         } catch (e: Throwable) {
-            sendEvent(MainScreenUiEvent.ShowError(
-                message = e.message ?: "${MainViewModel::class.qualifiedName}: Unknown error."))
+            Timber.e(wrapErrorMessage(e))
+            sendEvent(MainScreenUiEvent.ShowError(message = e.message ?: wrapErrorMessage(Throwable("Unknown error"))))
         }
     }
 
@@ -75,8 +79,11 @@ class MainViewModel @Inject constructor(
                 }
                 else -> {
                     // do nothing
+                    Timber.d("MainReducer - invoked reduce else branch.")
                 }
             }
         }
     }
+
+    private fun wrapErrorMessage(error: Throwable) = "${MainViewModel::class.qualifiedName}: $error."
 }

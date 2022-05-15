@@ -74,6 +74,11 @@ dependencies {
     implementation(Deps.Moshi.moshiAdapters)
     kapt(Deps.Moshi.moshiKotlinCodegen)
 
+    // Database
+    implementation(Deps.Room.room)
+    implementation(Deps.Room.roomKtx)
+    kapt(Deps.Room.compiler)
+
     // Coroutines
     implementation(Deps.Coroutines.core)
     implementation(Deps.Coroutines.android)
