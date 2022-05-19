@@ -56,3 +56,6 @@ More information about the selected breed are also displayed.
 3. Update UI layer to dynamically determine `page`/`limit`/`order` parameters in `image/search` request.
 4. Integrate Crash reporting (`Crashlytics`, `Sentry`, others).
 5. Integrate custom Theme.
+6. Integrate more features 
+   1. Details page to show info about cat's breed preferred food, live in environment, etc. (Will need addition data sources).
+   2. Search bar to search up cross-breed criteria of interest (cats with specific temperament, etc.).

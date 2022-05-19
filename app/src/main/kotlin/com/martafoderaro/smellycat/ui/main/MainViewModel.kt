@@ -11,13 +11,14 @@ import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.IG
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.usecase.IGetBreedUseCase
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.util.isConnected
 import com.martafoderaro.smellycat.core.CoroutineDispatchers
+import com.martafoderaro.smellycat.data.datasources.network.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import kotlinx.coroutines.flow.StateFlow
 
 @Suppress("DeferredResultUnused")
 @HiltViewModel
@@ -35,7 +36,7 @@ class MainViewModel @Inject constructor(
 
     private val reducer = MainReducer(MainScreenState.initial())
 
-    override val state: Flow<MainScreenState>
+    override val state: StateFlow<MainScreenState>
         get() = reducer.state
 
     init {
@@ -60,13 +61,10 @@ class MainViewModel @Inject constructor(
     }
 
     private fun loadBreeds() = viewModelScope.launch(dispatchers.io) {
-        try {
-            val data = getBreedsUseCase.invoke(Unit).last()
-            sendEvent(MainScreenUiEvent.ShowBreeds(breeds = data))
-        } catch (e: Throwable) {
-            Timber.e(wrapErrorMessage(e))
-            sendEvent(MainScreenUiEvent.ShowError(
-                message = e.message ?: "${MainViewModel::class.qualifiedName}: Unknown error."))
+        when (val data = getBreedsUseCase.invoke(Unit).last()) {
+            is ResultWrapper.Success -> sendEvent(MainScreenUiEvent.ShowBreeds(breeds = data.value))
+            is ResultWrapper.GenericError -> handleError(data.error?.message)
+            is ResultWrapper.NetworkError -> handleError(data.message)
         }
     }
 
@@ -80,12 +78,10 @@ class MainViewModel @Inject constructor(
     private fun getBreedImages(breedId: String) = viewModelScope.launch(dispatchers.io) {
         //TODO update UI layer to dynamically determine page/limit/order parameters
         val parameters = GetBreedImagesParameters(breedId = breedId, page = 10, limit = 100, order = ImageOrderType.RANDOM.name)
-        try {
-            val data = getBreedImagesUseCase.invoke(parameters = parameters).last()
-            sendEvent(MainScreenUiEvent.ShowBreedImages(images = data))
-        } catch (e: Throwable) {
-            Timber.e(wrapErrorMessage(e))
-            sendEvent(MainScreenUiEvent.ShowError(message = e.message ?: wrapErrorMessage(Throwable("Unknown error"))))
+        when (val data = getBreedImagesUseCase.invoke(parameters = parameters).last()) {
+            is ResultWrapper.Success -> sendEvent(MainScreenUiEvent.ShowBreedImages(images = data.value))
+            is ResultWrapper.GenericError -> handleError(errorMessage = data.error?.message)
+            is ResultWrapper.NetworkError -> handleError(errorMessage = data.message)
         }
     }
 
@@ -119,6 +115,12 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun handleError(errorMessage: String?) {
+        val message = errorMessage ?: wrapErrorMessage(Throwable("Unknown error"))
+        Timber.e(message)
+        sendEvent(MainScreenUiEvent.ShowError(message = message))
     }
 
     private fun wrapErrorMessage(error: Throwable) = "${MainViewModel::class.qualifiedName}: $error."

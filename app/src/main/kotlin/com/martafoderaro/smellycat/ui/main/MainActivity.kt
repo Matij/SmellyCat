@@ -45,18 +45,19 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
+            MainScreen(viewModel)
         }
     }
 
     @Preview
     @Composable
     private fun CatBreedPreview() {
-        MainScreen()
+        MainScreen(viewModel)
     }
 
     @Composable
     private fun MainScreen(
+        viewModel: MainViewModel,
         scaffoldState: ScaffoldState = rememberScaffoldState()
     ) {
         val state by viewModel.state.collectAsState(MainScreenState.initial())

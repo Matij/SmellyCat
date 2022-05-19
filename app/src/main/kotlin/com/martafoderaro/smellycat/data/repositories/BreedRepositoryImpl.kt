@@ -4,6 +4,7 @@ import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.database.BreedEntity
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.database.BreedImageDao
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.database.BreedImageEntity
+import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.network.NetworkHelper
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.network.api.CatApiService
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.mapper.ApiBreedImageMapper
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.mapper.ApiBreedMapper
@@ -12,6 +13,7 @@ import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.mapper.Loc
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.repository.BreedRepository
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.util.isConnected
 import com.martafoderaro.smellycat.core.CoroutineDispatchers
+import com.martafoderaro.smellycat.data.datasources.network.ResultWrapper
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
@@ -23,47 +25,52 @@ class BreedRepositoryImpl @Inject constructor(
     private val localBreedMapper: LocalBreedMapper,
     private val apiBreedImageMapper: ApiBreedImageMapper,
     private val localBreedImageMapper: LocalBreedImageMapper,
+    private val networkHelper: NetworkHelper,
     private val dispatchers: CoroutineDispatchers,
 ): BreedRepository {
 
-    override fun breeds() = when (isConnected()) {
+    override suspend fun breeds() = when (isConnected()) {
         true -> remoteBreeds()
         else -> localBreeds()
     }
 
-    override fun breed(breedId: String) = flow {
+    override suspend fun breed(breedId: String) = flow {
         emit(localBreedMapper.map(breedDao.getBreed(breedId)))
     }.flowOn(dispatchers.io)
 
     private fun localBreeds() = flow {
         val localBreeds = breedDao.getAllBreeds()
-        emit(localBreedMapper.map(localBreeds))
+        emit(ResultWrapper.Success(localBreedMapper.map(localBreeds)))
     }.flowOn(dispatchers.io)
 
-    private fun remoteBreeds() = flow {
-        val apiBreeds = catApiService.breeds()
-        val localBreeds = apiBreedMapper.map(apiBreeds)
-        storeBreedsInLocalMemory(localBreeds)
-        emit(localBreedMapper.map(localBreeds))
+    private suspend fun remoteBreeds() = flow {
+        emit(networkHelper.safeApiCall {
+            val apiBreeds = catApiService.breeds()
+            val localBreeds = apiBreedMapper.map(apiBreeds)
+            storeBreedsInLocalMemory(localBreeds)
+            localBreedMapper.map(localBreeds)
+        })
     }.flowOn(dispatchers.io)
 
-    override fun searchBreedImages(breedId: String, page: Int, limit: Int, order: String) = when (isConnected()) {
+    override suspend fun searchBreedImages(breedId: String, page: Int, limit: Int, order: String) = when (isConnected()) {
         true -> remoteBreedImages(breedId, page, limit, order)
         else -> localBreedImages(breedId)
     }
 
     private fun localBreedImages(breedId: String) = flow {
         val localBreedImages = breedImageDao.getBreedImages(breedId = breedId)
-        emit(localBreedImageMapper.map(localBreedImages))
+        emit(ResultWrapper.Success(localBreedImageMapper.map(localBreedImages)))
     }.flowOn(dispatchers.io)
 
     private fun remoteBreedImages(breedId: String, page: Int, limit: Int, order: String) = flow {
-        val apiImages = catApiService.searchBreedImages(
-            breedId = breedId, page = page, limit = limit, order = order
-        )
-        val localBreedImages = apiBreedImageMapper.map(apiImages)
-        storeBreedImagesInLocalMemory(breedId, localBreedImages)
-        emit(localBreedImageMapper.map(localBreedImages))
+        emit(networkHelper.safeApiCall {
+            val apiImages = catApiService.searchBreedImages(
+                breedId = breedId, page = page, limit = limit, order = order
+            )
+            val localBreedImages = apiBreedImageMapper.map(apiImages)
+            storeBreedImagesInLocalMemory(breedId, localBreedImages)
+            localBreedImageMapper.map(localBreedImages)
+        })
     }.flowOn(dispatchers.io)
 
     private suspend fun storeBreedsInLocalMemory(data: List<BreedEntity>) {
