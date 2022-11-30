@@ -24,6 +24,7 @@ object Deps {
         const val appCompat = "androidx.appcompat:appcompat:1.4.1"
         const val coreKtx = "androidx.core:core-ktx:1.7.0"
         const val pagingCompose = "androidx.paging:paging-compose:1.0.0-alpha14"
+        const val process = "androidx.lifecycle:lifecycle-process:2.4.1"
     }
 
     object Coil {
@@ -34,8 +35,8 @@ object Deps {
         const val version = "1.1.1"
 
         const val compiler = "androidx.compose.compiler:compiler:$version"
-        const val pager = "com.google.accompanist:accompanist-pager:0.24.8-beta"
-        const val pagerIndicators = "com.google.accompanist:accompanist-pager-indicators:0.24.8-beta"
+        const val pager = "com.google.accompanist:accompanist-pager:0.23.1"
+        const val pagerIndicators = "com.google.accompanist:accompanist-pager-indicators:0.23.1"
         const val foundation = "androidx.compose.foundation:foundation:$version"
         const val layout = "androidx.compose.foundation:foundation-layout:$version"
         const val material = "androidx.compose.material:material:$version"
@@ -106,12 +107,13 @@ object Deps {
     }
 
     object Test {
+        const val coreTesting = "androidx.arch.core:core-testing:2.1.0"
         const val espresso = "androidx.test.espresso:espresso-core:3.4.0"
         const val extJUnit = "androidx.test.ext:junit:1.1.3"
-        const val jUnit = "junit:junit:4.13.2"
 
+        const val jUnit = "junit:junit:4.13.2"
         const val kotlinJUnit = "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
-        const val mockk = "io.mockk:mockk:1.12.1"
+        const val mockk = "io.mockk:mockk:1.12.4"
     }
 
     fun DependencyHandler.implementationCompose() {
@@ -136,6 +138,7 @@ object Deps {
         val configName = if (testImplementation) "testImplementation" else "implementation"
 
         add(configName, Coroutines.test)
+        add(configName, Test.coreTesting)
         add(configName, Test.espresso)
         add(configName, Test.extJUnit)
         add(configName, Test.jUnit)
