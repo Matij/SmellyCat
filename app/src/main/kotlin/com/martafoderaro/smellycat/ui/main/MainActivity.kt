@@ -45,7 +45,9 @@ class MainActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen(viewModel)
+            MaterialTheme {
+                MainScreen(viewModel)
+            }
         }
     }
 
@@ -92,7 +94,7 @@ class MainActivity: ComponentActivity() {
                     MainScreenEmpty()
                     MySnackbar(state.errorMessage!!)
                 }
-                state.breeds.isEmpty() && state.images.isEmpty() -> {
+                state.images.isEmpty() -> {
                     MainScreenEmpty()
                 }
             }

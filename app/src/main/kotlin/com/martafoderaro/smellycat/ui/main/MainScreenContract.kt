@@ -9,6 +9,7 @@ import com.martafoderaro.smellycat.com.martafoderaro.smellycat.domain.model.Bree
 
 @Immutable
 sealed class MainScreenUiEvent : UiEvent {
+    data class ShowLoadingState(val isLoading: Boolean): MainScreenUiEvent()
     data class ShowBreeds(val breeds: List<Breed>): MainScreenUiEvent()
     data class ShowBreedImages(val images: List<BreedImage>): MainScreenUiEvent()
     data class UpdateSelectedBreed(val breed: Breed): MainScreenUiEvent()

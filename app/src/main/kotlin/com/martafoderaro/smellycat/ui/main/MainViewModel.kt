@@ -36,6 +36,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onBreedSelected(breedId: String) {
+        sendEvent(MainScreenUiEvent.ShowLoadingState(isLoading = true))
         loadBreed(breedId)
         getBreedImages(breedId = breedId)
     }
@@ -71,6 +72,7 @@ class MainViewModel @Inject constructor(
         when (val data = breedRepository.searchBreedImages(breedId = breedId)) {
             is ResultWrapper.Success -> {
                 sendEvent(MainScreenUiEvent.ShowBreedImages(images = data.value))
+                sendEvent(MainScreenUiEvent.ShowLoadingState(isLoading = false))
             }
             is ResultWrapper.GenericError -> handleError(errorMessage = data.error?.message)
             is ResultWrapper.NetworkError -> handleError(errorMessage = data.message)
