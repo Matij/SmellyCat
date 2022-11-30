@@ -1,9 +1,7 @@
 package com.martafoderaro.smellycat.data.datasources.network
 
 import com.martafoderaro.smellycat.BuildConfig
-import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.network.NetworkHelper
 import com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.network.api.CatApiService
-import com.martafoderaro.smellycat.core.CoroutineDispatchers
 import com.martafoderaro.smellycat.data.datasources.network.interceptor.AuthApiKeyInterceptor
 import com.squareup.moshi.Moshi
 import dagger.Binds
@@ -112,10 +110,6 @@ object NetworkModule {
             .addInterceptor(authInterceptor)
             .build()
     }
-
-    @Provides
-    fun provideNetworkHelper(coroutineDispatchers: CoroutineDispatchers) =
-        NetworkHelper(coroutineDispatchers)
 
     @Module
     @InstallIn(SingletonComponent::class)

@@ -1,6 +1,6 @@
 package com.martafoderaro.smellycat.com.martafoderaro.smellycat.data.datasources.network
 
-import com.martafoderaro.smellycat.core.CoroutineDispatchers
+import com.martafoderaro.smellycat.core.CoroutineDispatcherProvider
 import com.martafoderaro.smellycat.data.datasources.network.ResultWrapper
 import java.io.IOException
 import javax.inject.Inject
@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
 class NetworkHelper @Inject constructor(
-    private val dispatchers: CoroutineDispatchers,
+    private val dispatchers: CoroutineDispatcherProvider,
 ) {
     suspend fun <T> safeApiCall(
         apiCall: suspend () -> T
