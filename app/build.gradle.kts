@@ -52,6 +52,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = Deps.Compose.version
     }
+
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
